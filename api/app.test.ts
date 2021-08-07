@@ -23,4 +23,4 @@ describe('Routes return correct status code',()=>{
         expect(response.statusCode).toBe(200);
       })
   })
-})
+});
