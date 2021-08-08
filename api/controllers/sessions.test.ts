@@ -1,6 +1,6 @@
 import User from '../models/user';
 import Session from '../models/session';
-import { createSession, login } from "./sessions";
+import { createSession, login, authorizeSession } from "./sessions";
 jest.mock('../models/session');
 jest.mock('../models/user');
 
@@ -20,6 +20,12 @@ describe('Calls database models',()=>{
     mockGet.mockRestore();
     mockSet.mockRestore();
   })
+  test('authorizeSession',async ()=>{
+    const mockGet = jest.spyOn(Session,'get')
+    await authorizeSession('test')
+    expect(mockGet).toBeCalled();
+    mockGet.mockRestore();
+  })
 })
 
 describe('Returns success: false on error',()=>{
@@ -27,6 +33,18 @@ describe('Returns success: false on error',()=>{
     jest.spyOn(User,'findOne')
       .mockImplementation(()=>{throw 'test'})
     let result = await login('test','test');
+    expect(result.success).toStrictEqual(false);
+  })
+  test('createSession', async ()=>{
+    jest.spyOn(Session,'get')
+      .mockImplementation(()=>{throw 'test'})
+    let result = await createSession('test');
+    expect(result.success).toStrictEqual(false);
+  })
+  test('authorizeSession', async ()=>{
+    jest.spyOn(Session,'get')
+      .mockImplementation(()=>{throw 'test'})
+    let result = await authorizeSession('test');
     expect(result.success).toStrictEqual(false);
   })
 })

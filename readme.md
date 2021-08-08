@@ -14,6 +14,7 @@ A simple online shop system.
 - TypeScript
 - MongoDB
 - Mongoose
+- Redis
 - GraphQL
 - Jest
 - Supertest
