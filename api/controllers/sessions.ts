@@ -1,5 +1,6 @@
 import User from '../models/user';
 import Session from '../models/session';
+import { getUserById } from './users';
 import { sha256 } from '../util/encryptor';
 import {v4 as uuidv4} from 'uuid';
 const SESSION_EXPIRY = 30*60;
@@ -55,5 +56,14 @@ export const authorizeSession = async (session_id: string) => {
   if(!session){
     return {success: false, error: "Session invalid or expired", code: "INVALID_SESSION"};
   }
-  return {success: true, payload: JSON.parse(session)};
+  // Details valid, insert user details:
+  let {user_id} = JSON.parse(session);
+  let user;
+  try{
+    user = await getUserById(user_id);
+  }catch(err){
+    console.log(err);
+    return {success: false, error: "Database error, please try again", code: "DATABASE_ERROR"}
+  }
+  return {success: true, payload: user};
 }

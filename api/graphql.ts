@@ -2,7 +2,7 @@ import {buildSchema} from 'graphql';
 import {graphqlHTTP} from 'express-graphql';
 
 import { createUser } from './controllers/users';
-import {login, authorizeSession} from './controllers/sessions' 
+import { login, authorizeSession } from './controllers/sessions' 
 
 interface EmailPassword{
   email: string;
@@ -10,6 +10,13 @@ interface EmailPassword{
 }
 
 const schema = buildSchema(`
+type UserResponse{
+  success: Boolean!
+  email: String
+  role: String
+  error: String
+}
+
 type SuccessResponse{
   success: Boolean!
   error: String
@@ -17,9 +24,10 @@ type SuccessResponse{
   code: String
 }
 type Query{
-  test: String
-  createUser(email: String,password: String): SuccessResponse!
-  login(email: String, password: String): SuccessResponse!
+  test: Boolean
+  CreateUser(email: String,password: String): SuccessResponse!
+  Login(email: String, password: String): SuccessResponse!
+  Authorize(session: String): UserResponse!
 }
 `)
 
@@ -34,6 +42,13 @@ const root = {
   login: async (args: EmailPassword) => {
     let result = await login(args.email,args.password);
     return result;
+  },
+  authorize: async (args: {session: string})=>{
+    let session = await authorizeSession(args.session);
+    if(session.success){
+      return {success: true, email: session.payload.email, role: session.payload.role}
+    }
+    return session;
   }
 }
 

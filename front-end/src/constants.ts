@@ -1,3 +1,1 @@
-export default {
-  API_ROUTE: `http://localhost:8000`
-}
+export const API_ROUTE = `http://localhost:8000/_graphql`;

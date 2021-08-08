@@ -19,4 +19,8 @@ describe('Calls correct controller functions',()=>{
     expect(result.success).toBeTruthy()
     expect(result.payload).toBe('test')
   })
+  test('authorize',async ()=>{
+    let result: any = await root.authorize({session: 'test'})
+    expect(result.success).toBeTruthy();
+  })
 })
