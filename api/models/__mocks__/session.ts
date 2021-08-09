@@ -1,4 +1,4 @@
 export default {
-  get: () =>(""),
+  get: () =>{return new Promise((resolve)=>{resolve('')})},
   set: () =>(true)
 }

@@ -1,9 +1,10 @@
-import Redis from 'ioredis';
-const redis = new Redis();
+import redis from 'ioredis';
+const Redis = new redis();
 
 const Session = {
-  get: redis.get,
-  set: redis.set
+  get: (a: any) => { return Redis.get(a)},
+  set: (a:any,b:any,c:any,d:any) => {return Redis.set(a,b,c,d)}
+  // set: redis.set
 };
 
 export default Session;

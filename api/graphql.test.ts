@@ -10,17 +10,17 @@ describe('Returns correct value',()=>{
 
 describe('Calls correct controller functions',()=>{
   test('createUser',async ()=>{
-    let result: any = await root.createUser({email: 'test', password: 'test'});
+    let result: any = await root.CreateUser({email: 'test', password: 'test'});
     expect(result.success).toBeTruthy()
     expect(result.payload).toBe('test')
   })
   test('login', async ()=>{
-    let result: any = await root.login({email: 'test', password: 'test'})
+    let result: any = await root.Login({email: 'test', password: 'test'})
     expect(result.success).toBeTruthy()
     expect(result.payload).toBe('test')
   })
   test('authorize',async ()=>{
-    let result: any = await root.authorize({session: 'test'})
+    let result: any = await root.Authorize({session: 'test'})
     expect(result.success).toBeTruthy();
   })
 })

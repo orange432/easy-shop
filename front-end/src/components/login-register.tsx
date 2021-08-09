@@ -49,6 +49,9 @@ const Tabs = styled.div`
 const Tab = styled.div`
   width: 50%;
   padding: 30px 15px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 30px;
 `
 
 const Title = styled.h2`
@@ -102,7 +105,7 @@ const LoginRegister = () => {
       return errorMsg("Password and Verify password don't match!");
     }
     const query = `
-      query{
+      mutation{
         CreateUser(email: "${state.email}", password: "${state.password}"){
           success
           error
@@ -112,6 +115,7 @@ const LoginRegister = () => {
     APICall(query)
     .then(res=>res.json())
     .then(({data})=>{
+      console.log(data)
       if(data.CreateUser.success){
         dispatch({type: "tabLogin"})
         errorMsg('User successfully created!');
@@ -127,7 +131,7 @@ const LoginRegister = () => {
       return errorMsg("Please enter a valid email and password.")
     }
     const query = `
-      query{
+      mutation{
         Login(email: "${state.email}", password: "${state.password}"){
           success
           payload
@@ -139,7 +143,7 @@ const LoginRegister = () => {
     .then(res=>res.json())
     .then(({data})=>{
       if(data.Login.success){
-        localStorage.setItem('session',data.payload);
+        localStorage.setItem('session',data.Login.payload);
         window.location.href="/dashboard"
       }else{
         errorMsg(data.Login.error);
@@ -152,7 +156,7 @@ const LoginRegister = () => {
     return (
       <Container>
         <Tabs>
-          <Tab style={{background: '#111', cursor: 'pointer'}} onClick={()=>dispatch({type: "tabLogin"})}>Login</Tab>
+          <Tab style={{background: '#111', cursor: 'pointer', color: '#fff'}} onClick={()=>dispatch({type: "tabLogin"})}>Login</Tab>
           <Tab>Register</Tab>
         </Tabs>
         <Title>Register</Title>
@@ -175,7 +179,7 @@ const LoginRegister = () => {
     <Container>
       <Tabs>
         <Tab>Login</Tab>
-        <Tab style={{background: '#111', cursor: 'pointer'}} onClick={()=>dispatch({type: "tabRegister"})}>Register</Tab>
+        <Tab style={{background: '#111', cursor: 'pointer', color: '#fff'}} onClick={()=>dispatch({type: "tabRegister"})}>Register</Tab>
       </Tabs>
       <Title>Login</Title>
       <Error>{state.error}</Error>

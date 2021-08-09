@@ -28,7 +28,7 @@ describe('Calls database models',()=>{
   })
 })
 
-describe('Returns success: false on error',()=>{
+describe('On Returns success: false on error',()=>{
   test('login', async ()=>{
     jest.spyOn(User,'findOne')
       .mockImplementation(()=>{throw 'test'})
@@ -37,14 +37,14 @@ describe('Returns success: false on error',()=>{
   })
   test('createSession', async ()=>{
     jest.spyOn(Session,'get')
-      .mockImplementation(()=>{throw 'test'})
+      .mockImplementation(()=>{return Promise.reject(new Error('test'))})
     let result = await createSession('test');
     expect(result.success).toStrictEqual(false);
   })
   test('authorizeSession', async ()=>{
     jest.spyOn(Session,'get')
-      .mockImplementation(()=>{throw 'test'})
-    let result = await authorizeSession('test');
+      .mockImplementation(()=>{return Promise.reject(new Error('test'))})
+    let result: any = await authorizeSession('test');
     expect(result.success).toStrictEqual(false);
   })
 })

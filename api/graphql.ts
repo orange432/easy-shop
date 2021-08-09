@@ -25,9 +25,11 @@ type SuccessResponse{
 }
 type Query{
   test: Boolean
+  Authorize(session: String): UserResponse!
+}
+type Mutation{
   CreateUser(email: String,password: String): SuccessResponse!
   Login(email: String, password: String): SuccessResponse!
-  Authorize(session: String): UserResponse!
 }
 `)
 
@@ -35,16 +37,16 @@ const root = {
   test: ()=>{
     return true;
   },
-  createUser: async (args: EmailPassword) => {
+  CreateUser: async (args: EmailPassword) => {
     let result = await createUser(args.email,args.password);
     return result;
   },
-  login: async (args: EmailPassword) => {
+  Login: async (args: EmailPassword) => {
     let result = await login(args.email,args.password);
     return result;
   },
-  authorize: async (args: {session: string})=>{
-    let session = await authorizeSession(args.session);
+  Authorize: async (args: {session: string})=>{
+    let session: any = await authorizeSession(args.session);
     if(session.success){
       return {success: true, email: session.payload.email, role: session.payload.role}
     }
