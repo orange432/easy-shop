@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
-dotenv.config();
+import path from 'path'
+dotenv.config({path: path.resolve(__dirname,'../.env')});
 import mongoose from 'mongoose'
 import app from './app';
 
@@ -11,7 +12,7 @@ if(typeof(MONGO_URI)==='undefined'){
   process.exit(1)
 }
 
-mongoose.connect(MONGO_URI,{useNewUrlParser: true})
+mongoose.connect(MONGO_URI,{useNewUrlParser: true, useUnifiedTopology: true})
   .then(
     ()=>{
       console.log('Connected to MongoDB Database');
