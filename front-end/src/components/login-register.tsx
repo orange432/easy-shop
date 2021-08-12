@@ -113,7 +113,6 @@ const LoginRegister = () => {
       }
     `
     APICall(query)
-    .then(res=>res.json())
     .then(({data})=>{
       console.log(data)
       if(data.CreateUser.success){
@@ -140,7 +139,6 @@ const LoginRegister = () => {
       }
     `
     APICall(query)
-    .then(res=>res.json())
     .then(({data})=>{
       if(data.Login.success){
         localStorage.setItem('session',data.Login.payload);

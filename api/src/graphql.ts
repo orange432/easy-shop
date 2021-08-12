@@ -2,7 +2,8 @@ import {buildSchema} from 'graphql';
 import {graphqlHTTP} from 'express-graphql';
 
 import { createUser } from './controllers/users';
-import { login, authorizeSession } from './controllers/sessions' 
+import { login, authorizeSession } from './controllers/sessions';
+import { listItems,getItem,createItem } from './controllers/items';
 
 interface EmailPassword{
   email: string;
@@ -10,6 +11,16 @@ interface EmailPassword{
 }
 
 const schema = buildSchema(`
+
+type Item{
+  _id: String
+  name: String
+  description: String
+  category: String
+  price: Float
+  image: String
+}
+
 type UserResponse{
   success: Boolean!
   email: String
@@ -25,6 +36,8 @@ type SuccessResponse{
 }
 type Query{
   test: Boolean
+  ListItems(page: Int): [Item!]!
+  ListAllItems(): [Item!]!
   Authorize(session: String): UserResponse!
 }
 type Mutation{
@@ -51,6 +64,10 @@ const root = {
       return {success: true, email: session.payload.email, role: session.payload.role}
     }
     return session;
+  },
+  ListItems: async (args: {page: number}) => {
+    let result =  await listItems(0);
+    return result;
   }
 }
 

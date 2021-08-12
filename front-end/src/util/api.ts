@@ -8,5 +8,5 @@ export const APICall = (query: string) => {
       "Accept": "application/json"
     },
     body: JSON.stringify({query})
-  })
+  }).then(res=>res.json())
 }

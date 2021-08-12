@@ -67,7 +67,7 @@ export const login = async (email: string, password: string) => {
 }
 
 // Makes sure the user session exists.  Returns the users id if it does.
-export const authorizeSession = async (session_id: string) => {
+export const authorizeSession = async (session_id: string): Promise<any> => {
   return new Promise((resolve,reject)=>{
     Session.get(`sess:${session_id}`).then(async (session:any)=>{
       if(!session){
