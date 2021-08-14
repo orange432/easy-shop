@@ -1,5 +1,5 @@
 import Item from "../models/item";
-import { listItems,getItem,createItem } from './items';
+import { listItems,getItem,createItem, listAllItems } from './items';
 jest.mock('../models/item');
 
 describe('Calls database models',()=>{
@@ -9,10 +9,22 @@ describe('Calls database models',()=>{
     expect(mock).toHaveBeenCalled();
     mock.mockRestore()
   })
-  test('createItem',async ()=>{
+  test('listAllItems',async ()=>{
+    const mock = jest.spyOn(Item,'find')
+    await listAllItems();
+    expect(mock).toHaveBeenCalled();
+    mock.mockRestore()
+  })
+  test('createItem no _id',async ()=>{
     const mock = jest.spyOn(Item,'create')
-    await createItem('test','test','test',1,'test');
-    expect(mock).toBeCalled();
+    await createItem('','test','test','test',1,'test');
+    expect(mock).toHaveBeenCalled();
+    mock.mockRestore()
+  })
+  test('createItem provided _id',async ()=>{
+    const mock = jest.spyOn(Item,'findByIdAndUpdate')
+    await createItem('abcd','test','test','test',1,'test');
+    expect(mock).toHaveBeenCalled();
     mock.mockRestore()
   })
   test('getItem',async ()=>{
@@ -30,10 +42,22 @@ describe('Errors return false',()=>{
     let result = await listItems(0);
     expect(result).toStrictEqual([]);
   })
-  test('createItem', async ()=>{
+  test('listAllItems', async ()=>{
+    jest.spyOn(Item,'find')
+    .mockImplementation(()=>{throw 'err'})
+    let result = await listAllItems();
+    expect(result).toStrictEqual([]);
+  })
+  test('createItem no _id', async ()=>{
     jest.spyOn(Item,'create')
     .mockImplementation(()=>{throw 'err'})
-    let result = await createItem('test','test','test',1,'test');
+    let result = await createItem('','test','test','test',1,'test');
+    expect(result.success).toStrictEqual(false);
+  })
+  test('createItem provided _id', async ()=>{
+    jest.spyOn(Item,'findByIdAndUpdate')
+    .mockImplementation(()=>{throw 'err'})
+    let result = await createItem('abcd','test','test','test',1,'test');
     expect(result.success).toStrictEqual(false);
   })
   test('getItem', async ()=>{

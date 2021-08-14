@@ -7,7 +7,6 @@ export const useCart = () => (useContext(CartContext));
 
 export const CartProvider: React.FC = ({children}) => {
   const [cart,setCart] = useState([]);
-  const [itemList, setItemList] = useState([]);
 
   // Loads the cart from localStorage
   const loadCart = () => {
@@ -15,42 +14,32 @@ export const CartProvider: React.FC = ({children}) => {
     return JSON.parse(storage);
   }
 
-  // Lists every item in the shop
-  const listAllItems = () => {
-    const query = `
-      query{
-        ListAllItems{
-          _id
-          name
-          description
-          category
-          price
-          image
-        }
-      }
-    `
-
-    APICall(query)
-    .then(({data})=>{
-      setItemList(data.ListAllItems);
-    })
+  // Saves cart to localstorage
+  const saveCart = (cart: ShopItem[]) => {
+    localStorage.setItem('cart',JSON.stringify(cart));
   }
 
   //Adds an item to the cart
-  const addItem = (id: string, quantity: number) => {
+  const addToCart = (id: string, quantity: number) => {
     let storage = loadCart();
     let search = storage.findIndex((item: ShopItem)=>item._id===id);
     if(search<0){
       storage[search].quantity+=quantity;
     }else{
-      
+      storage.push({_id: id, quantity})
     }
+    saveCart(storage);
+  }
+
+  // Loads cart item data into the cart state
+  const refreshCart = () => {
+    
   }
 
   const ctxValues = {
     cart,
-    loadCart,
-    addItem
+    addToCart,
+    refreshCart
   }
   return(
     <CartContext.Provider value={ctxValues}>

@@ -3,14 +3,24 @@ import {graphqlHTTP} from 'express-graphql';
 
 import { createUser } from './controllers/users';
 import { login, authorizeSession } from './controllers/sessions';
-import { listItems,getItem,createItem } from './controllers/items';
+import { listItems,listAllItems,getItem,createItem } from './controllers/items';
 
 interface EmailPassword{
   email: string;
   password: string;
 }
 
+
 const schema = buildSchema(`
+
+input ItemInput{
+  _id: String
+  name: String
+  description: String
+  category: String
+  price: Float
+  image: String
+}
 
 type Item{
   _id: String
@@ -19,6 +29,21 @@ type Item{
   category: String
   price: Float
   image: String
+}
+
+type CartItem{
+  _id: String
+  name: String
+  description: String
+  category: String
+  price: Float
+  quantity: Int
+  image: String
+}
+
+input BasicCartItem{
+  _id: String
+  quantity: Int
 }
 
 type UserResponse{
@@ -34,15 +59,20 @@ type SuccessResponse{
   payload: String
   code: String
 }
+
 type Query{
   test: Boolean
   ListItems(page: Int): [Item!]!
-  ListAllItems(): [Item!]!
+  ListAllItems: [Item!]!
   Authorize(session: String): UserResponse!
+  GetItem(_id: String): Item
+  LoadCart(input: [BasicCartItem]): [CartItem!]!
 }
+
 type Mutation{
   CreateUser(email: String,password: String): SuccessResponse!
   Login(email: String, password: String): SuccessResponse!
+  SaveItem(session: String, input: ItemInput): SuccessResponse
 }
 `)
 
@@ -65,9 +95,25 @@ const root = {
     }
     return session;
   },
-  ListItems: async (args: {page: number}) => {
-    let result =  await listItems(0);
+  GetItem: async (args: {_id: string}) => {
+    let result = await getItem(args._id);
     return result;
+  },
+  ListItems: async (args: {page: number}) => {
+    let result =  await listItems(args.page);
+    return result;
+  },
+  ListAllItems: async () => {
+    let result = await listAllItems();
+    return result;
+  },
+  SaveItem: async (args: {session: string, input: ShopItem}) => {
+    let session: any = await authorizeSession(args.session);
+    if(session.success){
+      let result = await createItem(args.input._id,args.input.name,args.input.description,args.input.category,args.input.price,args.input.image);
+      return result;
+    }
+    return session;
   }
 }
 

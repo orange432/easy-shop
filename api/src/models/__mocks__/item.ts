@@ -30,4 +30,12 @@ export default {
     price: 19.99,
     image: '/images/test.jpg'
   }),
+  findByIdAndUpdate: () => ({
+    _id: '507f191e810c19729de860ea',
+    name: 'Test Item A',
+    description: 'This is a test item.',
+    category: 'test',
+    price: 19.99,
+    image: '/images/test.jpg'
+  })
 }
