@@ -73,7 +73,7 @@ const ItemEditor = () => {
   const loadItem = (id: string) => {
     const query = `
       query{
-        LoadItem(){
+        GetItem(_id: "${id}"){
           _id
           name
           description
@@ -85,7 +85,8 @@ const ItemEditor = () => {
     `
     APICall(query)
     .then(({data})=>{
-      let item = data.LoadItem;
+      console.log(data);
+      let item = data.GetItem;
       dispatch({type: 'loadItem', value:item})
       dispatch({type: 'field', field: 'modalVisible',value: false})
     })
@@ -96,14 +97,14 @@ const ItemEditor = () => {
     e.preventDefault();
     const query = `
       mutation{
-        SaveItem(session: "${localStorage.getItem('session')}", input: {_id: "${state._id}",name: "${state.name}",description: "${state.description}", price: ${state.price},category: "${state.category}" }){
+        SaveItem(session: "${localStorage.getItem('session')}", input: {_id: "${state._id}",name: "${state.name}",description: "${state.description}", price: ${state.price},category: "${state.category}", image: "${state.image}" }){
           success
         }
       }
     `
     APICall(query)
     .then(({data})=>{
-      if(data.success){
+      if(data.SaveItem.success){
         alert("Item successfully saved!")
       }
     })
@@ -165,15 +166,15 @@ const ItemEditor = () => {
         <Form onSubmit={saveItem}>
           <h3>ID: {state._id}</h3>
           <Label>Name</Label>
-          <Input onChange={e=>dispatch({type: 'field', field: 'name',value: e.target.value})} value={state.name} />
+          <Input type="text" onChange={e=>dispatch({type: 'field', field: 'name',value: e.target.value})} value={state.name} />
           <Label>Description</Label>
-          <Input onChange={e=>dispatch({type: 'field', field: 'description',value: e.target.value})} value={state.description} />
+          <Input type="text" onChange={e=>dispatch({type: 'field', field: 'description',value: e.target.value})} value={state.description} />
           <Label>Price</Label>
-          <Input onChange={e=>dispatch({type: 'field', field: 'price',value: +e.target.value})} value={state.price} />
+          <Input type="number" onChange={e=>dispatch({type: 'field', field: 'price',value: +e.target.value})} value={state.price} />
           <Label>Category</Label>
-          <Input onChange={e=>dispatch({type: 'field', field: 'category',value: e.target.value})} value={state.category} />
+          <Input type="text" onChange={e=>dispatch({type: 'field', field: 'category',value: e.target.value})} value={state.category} />
           <Label>Image</Label>
-          <Input onChange={e=>dispatch({type: 'field', field: 'image',value: e.target.value})} value={state.image} />
+          <Input type="text" onChange={e=>dispatch({type: 'field', field: 'image',value: e.target.value})} value={state.image} />
           <div>
             <Button type="submit">Save</Button>
             <Button type="button" onClick={newItem}>New</Button>

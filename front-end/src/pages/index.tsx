@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import { APICall } from '../util/api'
 import styled from '@emotion/styled'
 import LoadingScreen from '../components/loading-screen'
+import ItemCard from '../components/item-card'
 
 const Title = styled.h1`
   text-align: center;
@@ -14,7 +15,7 @@ const Index = () => {
   const loadItems = ()=>{
     const query = `
       query{
-        LoadItems(page: 0){
+        ListItems(page: 0){
           _id
           name
           description
@@ -27,7 +28,8 @@ const Index = () => {
 
     APICall(query)
     .then(({data})=>{
-      setItems(data.LoadItems);
+      setItems(data.ListItems);
+      setLoading(false);
     })
   }
 
@@ -40,6 +42,9 @@ const Index = () => {
   return (
     <div>
       <Title>Easy Shop</Title>
+      {items.map((item: ShopItem)=>(
+        <ItemCard _id={item._id} name={item.name} description={item.description} category={item.category} price={item.price} image={item.image}/> 
+      ))}
     </div>
   )
 }

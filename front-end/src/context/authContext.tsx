@@ -12,7 +12,7 @@ export const AuthProvider: React.FC = ({children}) => {
   const [email,setEmail] = useState('');
   
   const authorize = () => {
-    console.log('AUTHORIZED!')
+    
     return new Promise((resolve,reject)=>{
       const token = localStorage.getItem('session')
       const query = `
@@ -25,10 +25,10 @@ export const AuthProvider: React.FC = ({children}) => {
         }
       `
       APICall(query)
-      .then(res=>res.json())
       .then((res: any)=>{
         let {data} = res;
         if(data.Authorize.success===true){
+          console.log('AUTHORIZED!')
           setEmail(data.Authorize.email)
           setIsAuthorized(true);
           resolve({authorized: true, email :data.Authorize.email})

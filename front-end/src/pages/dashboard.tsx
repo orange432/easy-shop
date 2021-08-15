@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import LoadingScreen from '../components/loading-screen';
 import UnauthorizedScreen from '../components/unauth-screen';
@@ -25,7 +26,10 @@ const Dashboard = () => {
   if(auth.isAuthorized){
     return (
       <div>
-        <h1>You are logged in!</h1>
+        <h1 style={{textAlign: 'center'}}>You are logged in!</h1>
+        <div style={{textAlign: 'center'}}>
+          <Link to="/editor">Item Editor</Link>
+        </div>
       </div>
     )
   }
