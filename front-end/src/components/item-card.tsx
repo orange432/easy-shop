@@ -24,6 +24,7 @@ const Text = styled.div`
   padding: 5px;
 `
 const Category = styled.div`
+  display: inline;
   text-align: center;
   background: rebeccapurple;
   color: #fff;

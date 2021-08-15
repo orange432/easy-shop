@@ -3,6 +3,7 @@ import { APICall } from '../util/api'
 import styled from '@emotion/styled'
 import LoadingScreen from '../components/loading-screen'
 import ItemCard from '../components/item-card'
+import { Link } from 'react-router-dom'
 
 const Title = styled.h1`
   text-align: center;
@@ -42,6 +43,9 @@ const Index = () => {
   return (
     <div>
       <Title>Easy Shop</Title>
+      <div>
+        <Link to="/login">Login/Register</Link>
+      </div>
       {items.map((item: ShopItem)=>(
         <ItemCard _id={item._id} name={item.name} description={item.description} category={item.category} price={item.price} image={item.image}/> 
       ))}

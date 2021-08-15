@@ -1,5 +1,5 @@
 // Login/Registration Page
-import React, {FormEventHandler, useReducer} from 'react'
+import React, {FormEvent, useReducer} from 'react'
 import { APICall } from '../util/api';
 import styled from '@emotion/styled';
 import Button from './button';
@@ -98,8 +98,8 @@ const LoginRegister = () => {
     },5000)
   }
 
-  //
-  const register = (e: any) => {
+  // Register
+  const register = (e: FormEvent) => {
     e.preventDefault();
     if(state.password!==state.verifyPassword){
       return errorMsg("Password and Verify password don't match!");
@@ -124,7 +124,8 @@ const LoginRegister = () => {
     })
   };
 
-  const login = (e: any) => {
+  // Login Function
+  const login = (e: FormEvent) => {
     e.preventDefault();
     if(state.password.length===0 || state.email.length===0){
       return errorMsg("Please enter a valid email and password.")
